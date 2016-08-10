@@ -19,6 +19,7 @@ WIDTH = 15
 Block = namedtuple('Block', 'posns')
 ActiveBlock = namedtuple('ActiveBlock', 'x y block')
 
+
 class Grid:
     def __init__(self, blocks, current_block):
         self.blocks = blocks
@@ -39,7 +40,11 @@ class Grid:
         Returns None if an invalid Direction is provided.
         A Direction is either 'left' or 'right'.
         '''
-        raise NotImplementedError("Replace this line with your implementation")
+        x, y, block = self.current_block
+        if 'right':
+            return Grid(self.blocks, ActiveBlock(x+1, y, block))
+        elif 'left':
+            return Grid(self.blocks, ActiveBlock(x-1, y, block))
 
     def rotate(self):
         ''' Grid -> Grid
@@ -56,7 +61,7 @@ class Grid:
         A Grid is in a valid state if all blocks (including the ActiveBlock)
         are in bounds and not overlapping.
         '''
-        raise NotImplementedError("Replace this line with your implementation")
+        return 
 
     def is_occupied(self, p):
         ''' (Grid, (int, int)) -> bool
