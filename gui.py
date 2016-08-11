@@ -23,7 +23,7 @@ class Tetris:
 
     def quit(self, event):
         self.parent.destroy()
-    
+
     def new_game(self, event):
         self.g = Grid([], ActiveBlock(WIDTH // 2, HEIGHT - 1, new_block()))
         self.blocks = 0
@@ -52,7 +52,7 @@ class Tetris:
         if g.is_valid():
             self.g = g
         self.draw()
-        
+
     def keep_dropping(self):
         g = self.g.drop()
         if g.is_valid():
@@ -76,7 +76,7 @@ class Tetris:
         for x in range(0, WIDTH *SCALE, 40):
             self.canvas.create_rectangle(x, 0, x + SCALE // 2, HEIGHT * SCALE,
                                          fill='light grey', outline='white')
-        
+
         gx = self.g.current_block.x * SCALE + SCALE // 5
         self.canvas.create_rectangle(gx, 0, gx + SCALE // 10, HEIGHT * SCALE,
                                         fill='red2', outline='white')
@@ -92,12 +92,11 @@ class Tetris:
 
     def _draw_posn(self, p):
         x, y = p
-        self.canvas.create_rectangle(x * SCALE, (HEIGHT * SCALE) - (y * SCALE), 
+        self.canvas.create_rectangle(x * SCALE, (HEIGHT * SCALE) - (y * SCALE),
                                      x * SCALE + SCALE // 2, (HEIGHT * SCALE) - (y * SCALE + SCALE // 2),
-                                     fill='blue')
+                                     fill=random.choice(['blue', 'red', 'green', 'pink','yellow', 'black', 'white', 'purple', 'orange']))
 
 if __name__ == '__main__':
     root = tkinter.Tk()
     tetris = Tetris(root)
     root.mainloop()
-    
