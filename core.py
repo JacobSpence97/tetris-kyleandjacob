@@ -61,7 +61,18 @@ class Grid:
         A Grid is in a valid state if all blocks (including the ActiveBlock)
         are in bounds and not overlapping.
         '''
-        return 
+        # existing blocks already placed
+        for b in self.blocks:
+            for x, y in b.posns:
+                if not (0 <= x < WIDTH and 0 <= y <= HEIGHT):
+                    return False
+        # active block is valie
+        x, y, block = self.current_block
+        for a, b in block.posns:
+            if not (0 <= x + a < WIDTH and 0 <= y + b <= HEIGHT):
+                return False
+        return True
+
 
     def is_occupied(self, p):
         ''' (Grid, (int, int)) -> bool
