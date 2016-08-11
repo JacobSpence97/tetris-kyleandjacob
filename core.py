@@ -13,7 +13,7 @@ An ActiveBlock is a block (oriented independent of the grid), with an x and y co
 from collections import namedtuple
 import random
 
-HEIGHT = 40
+HEIGHT = 30
 WIDTH = 15
 
 Block = namedtuple('Block', 'posns')
@@ -41,9 +41,9 @@ class Grid:
         A Direction is either 'left' or 'right'.
         '''
         x, y, block = self.current_block
-        if 'right':
+        if dir == 'right':
             return Grid(self.blocks, ActiveBlock(x+1, y, block))
-        elif 'left':
+        elif dir == 'left':
             return Grid(self.blocks, ActiveBlock(x-1, y, block))
 
     def rotate(self):
@@ -61,25 +61,31 @@ class Grid:
         A Grid is in a valid state if all blocks (including the ActiveBlock)
         are in bounds and not overlapping.
         '''
-        # existing blocks already placed
+        posn_set = set()
+
         for b in self.blocks:
             for x, y in b.posns:
+                posn_set.add((x, y))
                 if not (0 <= x < WIDTH and 0 <= y <= HEIGHT):
                     return False
-        # active block is valie
+
         x, y, block = self.current_block
         for a, b in block.posns:
-            if not (0 <= x + a < WIDTH and 0 <= y + b <= HEIGHT):
+            if (x + a, y + b) in posn_set:
+                return False
+            if not (0 <= x + a < WIDTH and 0 <= y + b):
                 return False
         return True
-
 
     def is_occupied(self, p):
         ''' (Grid, (int, int)) -> bool
 
         Returns True iff the posn `p` is occupied by a non-active block.
         '''
-        raise NotImplementedError("Replace this line with your implementation")
+        for block in self.blocks:
+            if p in block.posns:
+                return True
+        return False
 
     def _drop_above(self, r):
         return Grid([Block([(x, y if y < r else y - 1) for x, y in b.posns]) for b in self.blocks],
@@ -122,7 +128,6 @@ class Grid:
             return False
 
 
-
 def new_block():
     ''' () -> Block
 
@@ -134,4 +139,5 @@ def new_block():
                           Block([(-1, 1), (0, 1), (1, 1), (0, 0)]),
                           Block([(-1, 0), (0, 0), (1, 0), (1, 1)]),
                           Block([(-1, 1), (0, 1), (0, 0), (1, 0)]),
-                          Block([(0, 1), (1, 1), (0, 0), (1, 0)])])
+                          Block([(0, 1), (1, 1), (0, 0), (1, 0)]),
+                          Block([(0, 2), (1, 1), (0, 0), (2, 0)])])
