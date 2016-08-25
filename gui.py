@@ -1,14 +1,15 @@
 from core import *
 import tkinter
 import random
+
 SCALE = 20
-TICK_RATE = 300
+
 
 class Tetris:
     def __init__(self, parent):
         self.blocks = 0
         self.parent = parent
-        self.canvas = tkinter.Canvas(parent, width=WIDTH*SCALE, height=HEIGHT*SCALE, bg='white')
+        self.canvas = tkinter.Canvas(parent, width=WIDTH*SCALE, height=HEIGHT*SCALE, bg='black')
         self.canvas.pack()
 
         self.g = Grid([], ActiveBlock(WIDTH // 2, HEIGHT - 1, new_block()))
@@ -19,7 +20,10 @@ class Tetris:
         self.parent.bind('<Down>', self.drop)
         self.parent.bind('n', self.new_game)
         self.parent.bind('q', self.quit)
-        self.parent.after(TICK_RATE, self.keep_dropping)
+        self.parent.after(self.tick_rate(), self.keep_dropping)
+
+    def tick_rate(self):
+        return random.randint(50, 300)
 
     def quit(self, event):
         self.parent.destroy()
@@ -27,7 +31,7 @@ class Tetris:
     def new_game(self, event):
         self.g = Grid([], ActiveBlock(WIDTH // 2, HEIGHT - 1, new_block()))
         self.blocks = 0
-        self.parent.after(TICK_RATE, self.keep_dropping)
+        self.parent.after(self.tick_rate(), self.keep_dropping)
 
     def move_left(self, event):
         g = self.g.move('left')
@@ -57,13 +61,13 @@ class Tetris:
         g = self.g.drop()
         if g.is_valid():
             self.g = g
-            self.parent.after(TICK_RATE, self.keep_dropping)
+            self.parent.after(self.tick_rate(), self.keep_dropping)
         else:
             self.blocks += 1
             self.g = Grid(self.g.place_block().blocks, ActiveBlock(WIDTH // 2, HEIGHT - 1, new_block()))
             self.g = self.g.clear_full_rows()
             if self.g.is_valid():
-                self.parent.after(TICK_RATE, self.keep_dropping)
+                self.parent.after(self.tick_rate(), self.keep_dropping)
         self.draw()
 
     def draw(self):
@@ -75,11 +79,11 @@ class Tetris:
     def _draw_stripes(self):
         for x in range(0, WIDTH *SCALE, 40):
             self.canvas.create_rectangle(x, 0, x + SCALE // 2, HEIGHT * SCALE,
-                                         fill='light grey', outline='white')
+                                         fill='black', outline='black')
 
         gx = self.g.current_block.x * SCALE + SCALE // 5
         self.canvas.create_rectangle(gx, 0, gx + SCALE // 10, HEIGHT * SCALE,
-                                        fill='red2', outline='white')
+                                        fill='red2', outline='black')
 
     def _draw_placed_blocks(self):
         for b in self.g.blocks:
@@ -94,7 +98,8 @@ class Tetris:
         x, y = p
         self.canvas.create_rectangle(x * SCALE, (HEIGHT * SCALE) - (y * SCALE),
                                      x * SCALE + SCALE // 2, (HEIGHT * SCALE) - (y * SCALE + SCALE // 2),
-                                     fill=random.choice(['blue', 'red', 'green', 'pink','yellow', 'black', 'white', 'purple', 'orange']))
+                                     fill=random.choice(['blue', 'red', 'green', 'pink', 'yellow', 'cyan', 'white', 'purple', 'orange']),
+                                     outline='white')
 
 if __name__ == '__main__':
     root = tkinter.Tk()
